@@ -8,11 +8,14 @@
 <script>
 import HelloWorld from './components/HelloWorld.vue'
 
+
+
 export default {
   name: 'App',
   components: {
     HelloWorld
   }
+  //git测试
 }
 </script>
 
