@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.25.0",
-    "core-js": "^3.6.5",
+    "core-js": "^3.20.3",
     "element-ui": "^2.15.6",
     "less": "^4.1.1",
     "less-loader": "^5.0.0",
