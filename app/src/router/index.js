@@ -12,7 +12,6 @@ import Register from '@/pages/Register'
 //以下代码为了防止编程式跳转的push方法，点击多次不会报错
 //VueRouter原型对象的push保存一份
 let originPush = VueRouter.prototype.push;
-
 //重写push||replace
 //第一个参数：告诉原来push方法往哪里跳转（传递那些参数）
 VueRouter.prototype.push = function(location,resolve,reject){
