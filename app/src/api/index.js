@@ -8,3 +8,4 @@ import mockRequests from './mockAjax';
 //三级菜单的请求地址  /api/product/getBaseCategoryList   GET    没有任何参数
 export const reqCategoryList = ()=>requests({url:'/product/getBaseCategoryList',method:'get'});
 export const reqGetBannerList = ()=>mockRequests.get("/banner");
+export const reqFloorList = ()=>mockRequests({url:'/floor'});
