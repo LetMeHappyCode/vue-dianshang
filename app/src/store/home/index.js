@@ -1,12 +1,16 @@
-import { reqCategoryList } from "@/api";
+import { reqCategoryList,reqGetBannerList} from "@/api";
 //home模块小仓库
 const state={
     categoryList:[],
+    bannerList:[]
 };
 const mutations={
     CATEGORYLIST(state,categoryList){
         state.categoryList=categoryList;
         console.log("调用categoryList  mutations")
+    },
+    GETBANNERLIST(state,bannerList){
+        state.bannerList=bannerList;
     }
 };
 const actions ={
@@ -15,12 +19,17 @@ const actions ={
         let result =await reqCategoryList();
         if(result.code==200){
             commit("CATEGORYLIST",result.data)
-            console.log("调用categoryList  action接口 数据成功")
         }
         else{
-            console.log("调用categoryList  action接口 数据失败")
         }
         
+    },
+
+    async getBannerList({commit}){
+        let result = await reqGetBannerList();
+        if(result.code==200){
+            commit("GETBANNERLIST",result.data)
+        }
     }
 };
 const getters={};

@@ -28,9 +28,9 @@
             <!--头部第二行 搜索区域-->
             <div class="bottom">
                 <h1 class="logoArea">
-                    <a class="logo" title="尚品汇" href="###" target="_blank">
+                    <router-link to="/home" class="logo" title="尚品汇">
                         <img src="./images/logo.png" alt="">
-                    </a>
+                    </router-link>
                 </h1>
                 <div class="searchArea">
                     <form action="###" class="searchForm">
@@ -61,7 +61,17 @@ export default {
             //模板字符串
             // this.$router.push(`/search/${this.keyword}?k=${this.keyword}`)
             //对象写法
-            this.$router.push({name:"search",params:{keyword:this.keyword},query:{k:this.keyword}});
+            if(this.$route.query){
+                let location = {
+                    name:"search",
+                    params:{keyword:this.keyword || undefined}
+                };
+                location.query = this.$route.query;
+                console.log("======")
+               console.log(location)
+                this.$router.push(location);
+            }
+           
 
         }
     }

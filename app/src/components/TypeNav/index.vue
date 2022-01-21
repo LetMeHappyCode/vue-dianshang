@@ -3,10 +3,13 @@
   <div class="type-nav">
     <div class="container">
       <!-- 事件委派，加入一个div来做离开事件 -->
-      <div @mouseleave="leaveList">
+      <div @mouseleave="leaveShow" @mouseenter="enterShow">
         <h2 class="all">全部商品分类</h2>
         <!-- 三级联动 -->
-        <div class="sort">
+        <!-- 过渡动画 -->
+        <transition name="sort">
+          <div class="sort" v-show="show">
+        
           <!-- goSearch方法负责跳转，为性能考虑，不能够被遍历，所以放到循环外面 -->
           <div class="all-sort-list2" @click="goSearch">
             <div
@@ -51,6 +54,7 @@
             </div>
           </div>
         </div>
+        </transition>
       </div>
 
       <nav class="nav">
@@ -77,10 +81,12 @@ export default {
   data() {
     return {
       currentIndex: -1,
+      //只有在home页面时才展示三级联动，在search界面和其他界面不展示
+      show:true
     };
   },
   mounted() {
-    this.$store.dispatch("categoryList");
+    
   },
   computed: {
     ...mapState({
@@ -104,33 +110,49 @@ export default {
       this.currentIndex=index
     },50),
 
+    enterShow(){
+      if(this.$route.path != "/home"){
+        this.show=true
+      }
+    },
+
     //鼠标离开一级目录，失去颜色
-    leaveList() {
+    leaveShow() {
       this.currentIndex = -1;
+      if(this.$route.path != "/home"){
+        this.show=false
+      }
     },
     //路由跳转方法
     goSearch(event){
       let element=event.target;
       //获取当前发出 这个时间的所有节点，带有data-categoryName这样的节点一定是a标签
       //节点有一个dataset属性可以获得节点的自定义属性与属性值
-      let {categoryname,category1Id,category2Id,category3Id} = element.dataset;
+      let {categoryname,category1id,category2id,category3id} = element.dataset;
 
       //当前这个if语句：一定是a标签才会进入
       if(categoryname){
-        let loction = {name:"search"};
+        let location = {name:"search"};
         let query = {categoryName:categoryname}
         //一定是a标签:一级目录
-        if(category1Id){
-          query.category1Id=category1Id;
-        }else if(category2Id){
-          query.category2Id=category2Id;
-        }else{
-          query.category3Id=category3Id;
+        //注意大小写,驼峰
+        if(category1id){
+          query.category1Id=category1id;
+        }else if(category2id){
+          query.category2Id=category2id;
+        }else if(category3id){
+          query.category3Id=category3id;
         }
-        //整理参数
-        loction.query=query;
-        this.$router.push(loction);
 
+        if(this.$route.params){
+          location.params=this.$route.params;
+          //整理参数
+        location.query=query;
+        console.log(location)
+        this.$router.push(location);
+        }
+
+        
 
 
       }
@@ -254,6 +276,17 @@ export default {
           background: skyblue;
         }
       }
+    }
+
+    // 过渡动画
+    .sort-enter{
+      height: 0px;
+    }
+    .sort-enter-to{
+      height: 461px;
+    }
+    .sort-enter-active{
+      transition: all 0.5s linear;
     }
   }
 }

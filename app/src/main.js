@@ -5,9 +5,12 @@ import App from './App.vue'
 import router from '@/router'
 //引入Vuex仓库
 import store from './store'
-
+//引入mock
+import '@/mock/mockServe'
+//引入swiper的css样式,样式直接引就可以
+import 'swiper/css/swiper.css'
 // 三级联动组件 --- 注册TypeNav为   全局组件
-import TypeNav from '@/pages/Home/TypeNav'
+import TypeNav from '@/components/TypeNav'
 //第一个参数：全局组件的名字  第二个参数：哪一个组件
 Vue.component(TypeNav.name, TypeNav);
 
