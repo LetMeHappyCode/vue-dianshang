@@ -8,7 +8,6 @@ const state={
 const mutations={
     CATEGORYLIST(state,categoryList){
         state.categoryList=categoryList;
-        console.log("调用categoryList  mutations")
     },
     GETBANNERLIST(state,bannerList){
         state.bannerList=bannerList;

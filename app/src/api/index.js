@@ -9,3 +9,5 @@ import mockRequests from './mockAjax';
 export const reqCategoryList = ()=>requests({url:'/product/getBaseCategoryList',method:'get'});
 export const reqGetBannerList = ()=>mockRequests.get("/banner");
 export const reqFloorList = ()=>mockRequests({url:'/floor'});
+//搜索界面 传递一个默认参数至少是空对象
+export const reqSearchInfo =(params)=>requests({url:'/list',method:"post",data:params});

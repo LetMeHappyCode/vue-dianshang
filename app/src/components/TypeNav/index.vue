@@ -145,7 +145,7 @@ export default {
         }
 
         if(this.$route.params){
-          location.params=this.$route.params;
+          location.params=this.$route.params || undefined;
           //整理参数
         location.query=query;
         console.log(location)

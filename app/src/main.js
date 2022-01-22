@@ -18,6 +18,10 @@ Vue.component(TypeNav.name, TypeNav);
 import Carsousel from '@/components/Carsousel';
 Vue.component(Carsousel.name,Carsousel);
 
+//注册 全局组件--分页器Pagination
+import Pagination from '@/components/Pagination';
+Vue.component(Pagination.name,Pagination)
+
 Vue.config.productionTip = false
 
 new Vue({
