@@ -4,7 +4,7 @@
     <div class="type-wrap logo">
       <div class="fl key brand">品牌</div>
       <div class="value logos">
-        <ul class="logo-list" v-for="(trademark,index) in trademarkList" :key="trademark.tmId">
+        <ul class="logo-list" v-for="(trademark,index) in trademarkList" :key="trademark.tmId" @click="tradeMarkHandler(trademark)">
           <li>{{trademark.tmName}}</li>
         </ul>
       </div>
@@ -14,11 +14,11 @@
       </div>
     </div>
     <!-- 商品分类的属性 -->
-    <div class="type-wrap" v-for="(attrs,index) in attrsList" :key="attrs.attrId">
-      <div class="fl key">{{attrs.attrName}}</div>
+    <div class="type-wrap" v-for="(attr,index) in attrsList" :key="attr.attrId">
+      <div class="fl key">{{attr.attrName}}</div>
       <div class="fl value">
         <ul class="type-list">
-          <li v-for="(attrValue,index) in attrs.attrValueList" :key="index">
+          <li v-for="(attrValue,index) in attr.attrValueList" :key="index" @click="attrvalueInfo(attr,attrValue)">
             <a>{{attrValue}}</a>
           </li>
         </ul>
@@ -34,6 +34,14 @@ import {mapGetters, mapState} from 'vuex'
     name: 'SearchSelector',
     computed:{
       ...mapGetters(["attrsList","trademarkList"])
+    },
+    methods: {
+      tradeMarkHandler(trademark){
+        this.$emit('trademarkInfo', trademark);
+      },
+      attrvalueInfo(attr,attrValue){
+        this.$emit('attrvalueInfo',attr, attrValue);
+      }
     }
   }
 </script>

@@ -11,38 +11,34 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">iphone<i>×</i></li>
-            <li class="with-x">华为<i>×</i></li>
-            <li class="with-x">OPPO<i>×</i></li>
+            <!-- //商品分类面包屑 -->
+            <li class="with-x" v-if="searchParams.categoryName">{{searchParams.categoryName}}<i @click="removeCategoryName">×</i></li>
+            <!-- 品牌面包屑 -->
+            <li class="with-x" v-if="searchParams.trademark">{{searchParams.trademark.split(":")[1]}}<i @click="removeTrademark">×</i></li>
+            <!-- 属性面包屑 -->
+            <li class="with-x" v-for="(attr,index) in searchParams.props" :key="index">{{attr.split(":")[1]}}<i @click="removeAttr(index)">×</i></li>
+            <!-- 关键字keyword面包屑 -->
+            <li class="with-x" v-if="searchParams.keyword">{{searchParams.keyword}}<i @click="removeKeyword">×</i></li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector />
+        <SearchSelector
+          @trademarkInfo="trademarkInfo"
+          @attrvalueInfo="attrvalueInfo"
+        />
 
         <!--details-->
         <div class="details clearfix">
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+
+                <li :class="{active:isOne}" @click="changeOrder('1')">
+                  <a href="#">综合<span v-show="isOne"  :class="{'iconfont icon-up':isAsc,'iconfont icon-down':isDesc}"></span></a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
-                </li>
-                <li>
-                  <a href="#">新品</a>
-                </li>
-                <li>
-                  <a href="#">评价</a>
-                </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li :class="{active: isTwo}" @click="changeOrder('2')">
+                  <a href="#">价格<span v-show="isTwo" class="iconfont" :class="{'icon-up':isAsc,'icon-down':isDesc}"></span></a>
                 </li>
               </ul>
             </div>
@@ -118,7 +114,7 @@ export default {
     return {
       searchParams: {
         category1Id: "",
-        category3Id: "",
+        category2Id: "",
         category3Id: "",
         categoryName: "",
         keyword: "",
@@ -149,6 +145,18 @@ export default {
   computed: {
     //获取搜索返回的  商品类别
     ...mapGetters(["goodsList"]),
+    isOne(){
+      return this.searchParams.order.indexOf("1") != -1
+    },
+    isTwo(){
+      return this.searchParams.order.indexOf("2") != -1
+    },
+    isAsc() {
+      return this.searchParams.order.indexOf("asc") != -1;
+    },
+    isDesc() {
+      return this.searchParams.order.indexOf("desc") != -1;
+    },
     //获取商品总数
     ...mapState({
       total: (state) => state.search.searchList.total,
@@ -159,6 +167,7 @@ export default {
   },
   methods: {
     getData() {
+      console.log("发送请求");
       this.$store.dispatch("getSearchList", this.searchParams);
     },
     //分页器组件回调  自定义事件回调  --获取当前第几页
@@ -166,6 +175,78 @@ export default {
       this.searchParams.pageNo = pageNo;
       this.getData();
     },
+    trademarkInfo(trademark) {
+      //整理品牌字段参数：“ID:品牌名字字段”
+      this.searchParams.trademark = `${trademark.tmId}:${trademark.tmName}`;
+      //重新发送
+      this.getData();
+    },
+    attrvalueInfo(attr, attrValue) {
+      //["属性ID:属性值:属性名"]
+      let props = `${attr.attrId}:${attrValue}:${attr.attrName}`;
+      //if语句里面只有一行代码：可以省略大花括号
+      if (this.searchParams.props.indexOf(props) == -1)
+        this.searchParams.props.push(props);
+
+      //重新发送
+      this.getData();
+    },
+    //删除属性面包屑
+    removeAttr(index){
+      //再次整理参数
+      this.searchParams.props.splice(index, 1);
+      //再次发请求
+      this.getData();
+    },
+    //删除分类面包屑
+    removeCategoryName(){
+
+      this.searchParams.category1Id=undefined;
+      this.searchParams.category2Id=undefined;
+      this.searchParams.category3Id=undefined;
+      this.searchParams.categoryName=undefined;
+      //重新发送数据
+      this.getData();
+
+      //重新路由跳转
+      if (this.$route.params){
+        this.$router.push({name:"search",params:this.$route.params})
+      }
+    },
+    //删除商标面包屑
+    removeTrademark(){
+      this.searchParams.trademark=undefined;
+      this.getData();
+    },
+    //删除关键字面包屑
+    removeKeyword(){
+      this.searchParams.keyword=undefined;
+      this.getData();
+      //通知兄弟组件header  删除搜索栏中的关键字
+      this.$bus.$emit("clear")
+      if (this.$route.query){
+        this.$router.push({name:"search",query:this.$route.query})
+      }
+    },
+    changeOrder(flag){
+      let originOrder = this.searchParams.order;
+      let originFlag= originOrder.split(":")[0];
+      let originSort=originOrder.split(":")[1];
+
+      //新的排序方式
+      let newOrder="";
+      //判断是同一个按钮
+      if (flag==originFlag){
+        newOrder=`${originOrder}:${originSort == "desc"?"asc" : "desc"};`
+      }else {
+        //点击的不是同一个按钮
+        newOrder=`${flag}:${"desc"}`;
+      }
+      //给order重新赋值
+      this.searchParams.order=newOrder;
+      this.getData();
+    }
+
   },
 };
 </script>
@@ -412,7 +493,6 @@ export default {
           }
         }
       }
-
     }
   }
 }
