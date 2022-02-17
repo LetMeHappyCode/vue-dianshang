@@ -8,6 +8,9 @@ import Home from '@/pages/Home';
 import Search from '@/pages/Search';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register'
+import Detail from '@/pages/Detail'
+import AddCartSuccess from '@/pages/AddCartSuccess'
+import ShopCart from '@/pages/ShopCart'
 
 //以下代码为了防止编程式跳转的push方法，点击多次不会报错
 //VueRouter原型对象的push保存一份
@@ -51,8 +54,27 @@ export default new VueRouter({
             meta:{show:false}
         },
         {
+            name: 'detail',
+          path: "/detail/:skuId",
+          component: Detail,
+          meta: {show: false}
+        },
+        {
+          name: 'addCartSuccess',
+          path: "/AddCartSuccess" ,
+          component: AddCartSuccess
+
+        },
+        {
+          name: 'shopcart',
+          path: "/shopcart",
+            component: ShopCart
+        },
+        {
             path:"*",
-            redirect:"/home"
-        }
+            redirect:"/home",
+
+        },
+
     ]
 })

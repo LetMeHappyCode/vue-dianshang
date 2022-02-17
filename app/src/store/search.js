@@ -6,7 +6,6 @@ const state = {
 const mutations = {
     GETSEARCHLIST(state, searchList) {
         state.searchList = searchList
-        console.log("调用mutations")
     }
 };
 const actions = {
@@ -14,7 +13,6 @@ const actions = {
     async getSearchList({ commit }, params = {}) {
         let result = await reqSearchInfo(params);
         if (result.code == 200) {
-            console.log("调用actions");
             commit("GETSEARCHLIST", result.data);
         }
     }

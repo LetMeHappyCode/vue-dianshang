@@ -1,6 +1,7 @@
 //二次封装axios
 import axios from "axios";
-
+//在当前模块中引入store
+import store from '@/store'
 //进度条  ------ start()开始  done()结束 
 import nprogress, { start } from "nprogress";
 import "nprogress/nprogress.css"
@@ -15,6 +16,10 @@ const requests = axios.create({
 });
 //请求拦截器，发出请求之前可以拦截并且做一些事情
 requests.interceptors.request.use((config)=>{
+    if (store.state.detail.uuid_token){
+        //请求头添加一个字段(userTempId):和后台老师商量好了
+        config.headers.userTempId = store.state.detail.uuid_token;
+    }
     //进度条开始
     nprogress.start();
     //config  配置对象  对象中有一个属性重要，header请求头
